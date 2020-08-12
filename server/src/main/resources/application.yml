@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: local
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:bank
+    driver-class-name: org.h2.Driver
+    username: sa
+    platform: org.hibernate.dialect.h2dialect
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+server:
+  port: 9000
+
