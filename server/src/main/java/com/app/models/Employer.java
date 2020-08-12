@@ -69,4 +69,12 @@ public class Employer extends AbstractEntity implements Serializable {
     public int hashCode() {
         return Objects.hash(this.getId(), number, address);
     }
+
+    @Override
+    public String toString() {
+        return "Employer{" +
+                "number='" + number + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }
