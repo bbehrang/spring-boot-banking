@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/" + ApiConstants.API_VERSION + "/customers")
@@ -26,7 +27,7 @@ public class CustomerController {
     private AccountService accountService;
 
     @GetMapping
-    public List<Customer> getCustomers(){
+    public Set<Customer> getCustomers(){
         return customerService.findAll();
     }
     @PostMapping
@@ -40,12 +41,12 @@ public class CustomerController {
         return customer;
     }
     @DeleteMapping
-    public void deleteAllCustomers(@RequestBody List<Customer> customers){
+    public void deleteAllCustomers(@RequestBody Set<Customer> customers){
         customerService.deleteAll(customers);
     }
     @GetMapping(value = "/{id}")
     public Customer getCustomerById(@PathVariable("id") long id, HttpServletResponse response){
-        Customer customer = customerService.getOne(id);
+        Customer customer = customerService.findById(id);
         if(customer == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -54,7 +55,7 @@ public class CustomerController {
     @PutMapping("/{id}")
     public Customer updateCustomer(@RequestBody Customer customerCandidate, @PathVariable("id") long id,
                                    HttpServletResponse response){
-        Customer customer = customerService.update(id, customerCandidate);
+        Customer customer = customerService.updateById(id, customerCandidate);
         if(customer == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -67,12 +68,11 @@ public class CustomerController {
 
     @DeleteMapping(value = "/{id}")
     public void deleteCustomerById(@PathVariable("id") long id, HttpServletResponse response){
-         boolean isDelete = customerService.deleteById(id);
-         if(isDelete == false) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+         customerService.deleteById(id);
     }
 
     @GetMapping(value = "/{id}/accounts")
-    public List<Account> getCustomerAccounts(@PathVariable("id") long id){
+    public Set<Account> getCustomerAccounts(@PathVariable("id") long id){
         return customerService.getAccounts(id);
     }
     @PostMapping(value = "/{id}/accounts")
@@ -87,11 +87,10 @@ public class CustomerController {
         return addedAccount;
     }
     @DeleteMapping(value = "/{id}/accounts/{accountId}")
-    public void deleteCustomerAccount(@PathVariable("id") long id,
-                                      @PathVariable("accountId") long accountId,
+    public void deleteCustomerAccount(@PathVariable("id") Long id,
+                                      @PathVariable("accountId") Long accountId,
                                       HttpServletResponse response){
-        boolean isDeleted = accountService.delete(accountId);
-        if(!isDeleted) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        accountService.deleteById(accountId);
     }
 
     @PostMapping(value = "/{id}/employers")

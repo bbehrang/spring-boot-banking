@@ -3,103 +3,77 @@ package com.app.services;
 import com.app.models.Account;
 import com.app.models.Currency;
 import com.app.models.Customer;
-
 import com.app.models.Employer;
 import com.app.repository.AccountDao;
 import com.app.repository.CustomerDao;
-import org.hibernate.SessionFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManagerFactory;
-import javax.transaction.Transactional;
-import java.util.List;
+import java.util.Set;
 
 @Service
-@Transactional
 public class CustomerService {
 
     @Autowired
     private CustomerDao customerDao;
-    @Autowired AccountDao accountDao;
+    @Autowired
+    private AccountDao accountDao;
 
-    public Customer getOne(long id) {
-        return customerDao.getOne(id);
+    @Transactional(readOnly = true)
+    public Set<Customer> findAll() {
+        return (Set<Customer>) customerDao.findAll();
     }
 
-    public List<Customer> findAll() {
-        return customerDao.findAll();
+    @Transactional(readOnly = true)
+    public Customer findById(Long id) {
+        return customerDao.findById(id).orElse(null);
     }
-
-    public List<Account> getAccounts(long id){
-        return customerDao.getOne(id).getAccounts();
-    }
-
-    public Account getCustomerAccount(long accountId){
-        return accountDao.getOne(accountId);
-    }
-
-    public Account addCustomerAccount(long customerId, Account accountCandidate){
-        Customer customer = customerDao.getOne(customerId);
-        if(customer != null){
-            Account account = new Account(accountCandidate.getCurrency(), customer);
-            account.setBalance(accountCandidate.getBalance());
-            return accountDao.save(account);
-        }
-        return null;
-    }
-
-    public Customer save(Customer customer) {
-        if(customer.getAge() != null
-                && customer.getEmail() != null
-                && customer.getName() != null
-        ){
-            return customerDao.save(customer);
-        }
-        return null;
-
-    }
-    public Customer update(long id, Customer customerCandidate) {
-
-        if(customerCandidate.getAge() != null
-                && customerCandidate.getEmail() != null
-                && customerCandidate.getName() != null
-        ){
-            Customer foundCustomer =  this.getOne(id);
-            if(foundCustomer == null) {
-                return null;
-            }
-            foundCustomer.setAge(customerCandidate.getAge());
-            foundCustomer.setEmail(customerCandidate.getEmail());
-            foundCustomer.setName(customerCandidate.getName());
-            return customerDao.save(foundCustomer);
-        }
-        return customerCandidate; // Used for bad request response until validation is implemented
+    public Set<Account> getAccounts(Long id){
+        Customer customer = customerDao.findById(id).orElse(null);
+        return customer.getAccounts();
     }
 
 
-
-    public void saveAll(List<Customer> customers) {
-        customerDao.saveAll(customers);
-    }
-
-    public boolean deleteById(long id) {
-        Customer customer = customerDao.getOne(id);
-        if(customer == null) return false;
+    public void delete(Customer customer) {
         customerDao.delete(customer);
-        return true;
     }
 
-    public void deleteAll(List<Customer> customers) {
+    public void deleteById(Long id) {
+        customerDao.deleteById(id);
+    }
+
+    public void deleteAll(Set<Customer> customers) {
         customerDao.deleteAll(customers);
     }
 
-    public Customer addCustomerEmployer(long customerId, Employer employer){
-        Customer customer = customerDao.getOne(customerId);
-        if(customer == null) return null;
+    public Customer save(Customer customer) {
+        return customerDao.save(customer);
+    }
+
+    public Customer updateById(Long id, Customer customerCandidate) {
+        Customer customer = customerDao.findById(customerCandidate.getId()).orElse(null);
+        if (customer == null) return null;
+        customer.setName(customerCandidate.getName());
+        customer.setEmail(customerCandidate.getEmail());
+        customer.setAge(customerCandidate.getAge());
+        return customerDao.save(customer);
+    }
+
+    public Customer addCustomerEmployer(long customerId, Employer employer) {
+        Customer customer = customerDao.findById(customerId).orElse(null);
+        if (customer == null) return null;
         customer.addEmployer(employer);
         return customerDao.save(customer);
+    }
+
+    public Account addCustomerAccount(long customerId, Account accountCandidate) {
+        Customer customer = customerDao.findById(customerId).orElse(null);
+        if (customer == null) return null;
+        Account account = new Account(accountCandidate.getCurrency(), customer);
+        account.setBalance(accountCandidate.getBalance());
+        return accountDao.save(account);
     }
 
 }
