@@ -21,6 +21,8 @@ public class CustomerResponseDto extends AbstractResponseDto{
     private String email;
     @JsonView({CustomerList.class})
     private Integer age;
+    @JsonView({CustomerList.class})
+    private String phone;
     @JsonView({CustomerFull.class})
     private Set<AccountResponseDto> accounts;
     @JsonView({CustomerFull.class})

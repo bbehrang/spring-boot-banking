@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -22,8 +23,8 @@ public class CustomerService {
     private AccountDao accountDao;
 
     @Transactional(readOnly = true)
-    public Set<Customer> findAll() {
-        return (Set<Customer>) customerDao.findAll();
+    public List<Customer> findAll() {
+        return (List<Customer>) customerDao.findAll();
     }
 
     @Transactional(readOnly = true)

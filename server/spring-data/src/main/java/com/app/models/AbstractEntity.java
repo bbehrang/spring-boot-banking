@@ -5,6 +5,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
@@ -12,20 +13,21 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-abstract class AbstractEntity {
+@EqualsAndHashCode
+abstract class AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
     private Date createdAt;
 
-    @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_modified_at", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
     private Date lastModifiedAt;
 
     @Version

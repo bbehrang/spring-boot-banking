@@ -1,7 +1,7 @@
 package com.app.facade;
 
 import com.app.dto.reponse.AccountResponseDto;
-import com.app.dto.reponse.CustomerRequestDto;
+import com.app.dto.request.CustomerRequestDto;
 import com.app.dto.reponse.CustomerResponseDto;
 import com.app.dto.request.AccountRequestDto;
 import com.app.dto.request.EmployerRequestDto;
@@ -13,7 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.Set;
+import java.util.List;
 
 @Component
 public class CustomerFacade {
@@ -23,17 +23,19 @@ public class CustomerFacade {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Set<CustomerResponseDto> findAll() {
-        return modelMapper.map((Set<Customer>) customerService.findAll(),
-                new TypeToken<Set<CustomerResponseDto>>(){}.getType());
+    public List<CustomerResponseDto> findAll() {
+        return modelMapper.map((List<Customer>) customerService.findAll(),
+                new TypeToken<List<CustomerResponseDto>>(){}.getType());
     }
 
     public CustomerResponseDto findById(Long id) {
-        return modelMapper.map(customerService.findById(id), CustomerResponseDto.class);
+        Customer customer = customerService.findById(id);
+        CustomerResponseDto  cs= modelMapper.map(customer, CustomerResponseDto.class);
+        return cs;
     }
-    public Set<AccountResponseDto> getAccounts(Long id){
+    public List<AccountResponseDto> getAccounts(Long id){
         return modelMapper.map(customerService.getAccounts(id),
-                new TypeToken<Set<AccountResponseDto>>(){}.getType());
+                new TypeToken<List<AccountResponseDto>>(){}.getType());
     }
 
     public void delete(CustomerRequestDto customer) {
@@ -44,9 +46,9 @@ public class CustomerFacade {
         customerService.deleteById(id);
     }
 
-    public void deleteAll(Set<CustomerRequestDto> customers) {
+    public void deleteAll(List<CustomerRequestDto> customers) {
         customerService.deleteAll(modelMapper.map(customers,
-                new TypeToken<Set<Customer>>(){}.getType()));
+                new TypeToken<List<Customer>>(){}.getType()));
     }
 
     public CustomerResponseDto save(CustomerRequestDto customerCandidate) {

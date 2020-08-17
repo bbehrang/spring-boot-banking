@@ -1,8 +1,5 @@
 package com.app.models;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -13,7 +10,8 @@ import java.util.*;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name ="customers")
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false, exclude = {"accounts", "employers"})
+@ToString(exclude = {"accounts", "employers"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer extends AbstractEntity implements Serializable {
@@ -32,7 +30,7 @@ public class Customer extends AbstractEntity implements Serializable {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    private Set<Account> accounts;
+    private Set<Account> accounts = new HashSet<>();
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "customers_employers",
             joinColumns = {@JoinColumn(name = "customer_id", referencedColumnName = "id")},

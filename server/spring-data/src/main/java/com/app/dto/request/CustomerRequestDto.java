@@ -1,15 +1,11 @@
-package com.app.dto.reponse;
+package com.app.dto.request;
 
-import com.app.dto.reponse.views.customer.CustomerFull;
-import com.app.dto.reponse.views.customer.CustomerList;
-import com.fasterxml.jackson.annotation.JsonView;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.*;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +13,8 @@ import java.util.Set;
 public class CustomerRequestDto{
     @Size(min = 2)
     private String name;
+    @Size(min = 2)
+    private String password;
     @Email
     private String email;
     @NotBlank(message = "Phone number should be provided")

@@ -17,8 +17,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class Account extends AbstractEntity implements Serializable {
+@EqualsAndHashCode(callSuper = true, exclude = "customer")
+public class Account extends AbstractEntity {
     @Column(name = "number", unique = true, nullable = false, updatable = false)
     private String number;
     @Column(name= "currency", nullable = false)
@@ -26,7 +26,6 @@ public class Account extends AbstractEntity implements Serializable {
     private Currency currency;
     @Column(name = "balance")
     private Double balance;
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name ="customer_id",
             referencedColumnName = "id",

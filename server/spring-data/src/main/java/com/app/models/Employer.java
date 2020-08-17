@@ -17,7 +17,7 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false, exclude = "customers")
 public class Employer extends AbstractEntity implements Serializable {
     @Column(name = "number", nullable = false)
     private String number;
