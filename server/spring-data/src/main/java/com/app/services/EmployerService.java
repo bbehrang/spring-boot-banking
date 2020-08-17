@@ -31,8 +31,8 @@ public class EmployerService {
     public void deleteById(Long id){
         employerDao.deleteById(id);
     }
-    public void deleteAll(Set<Employer> customers){
-        employerDao.deleteAll(customers);
+    public void deleteAll(Set<Employer> employers){
+        employerDao.deleteAll(employers);
     }
 
     public Employer save(Employer employer){

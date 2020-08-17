@@ -9,7 +9,7 @@ import javax.validation.constraints.Positive;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TopUpRequestDto {
+public class SimpleBalanceRequestDto {
     @Positive
     private Double amount;
 }

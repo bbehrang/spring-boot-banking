@@ -1,47 +1,46 @@
 package com.app.controller;
 
 import com.app.contstants.ApiConstants;
-import com.app.models.Employer;
-import com.app.services.EmployerService;
+import com.app.dto.reponse.EmployerResponseDto;
+import com.app.dto.request.EmployerRequestDto;
+import com.app.facade.EmployerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/" + ApiConstants.API_VERSION + "/employers")
 public class EmployerController {
     @Autowired
-    private EmployerService employerService;
+    private EmployerFacade employerFacade;
 
     @GetMapping
-    public Set<Employer> getAll(){
-        return employerService.findAll();
+    public Set<EmployerResponseDto> getAll(){
+        return employerFacade.findAll();
     }
     @DeleteMapping
-    public void deleteEmployers(@RequestBody Set<Employer> employers){
-        employerService.deleteAll(employers);
+    public void deleteEmployers(@RequestBody Set<EmployerRequestDto> employers){
+        employerFacade.deleteAll(employers);
     }
     @GetMapping("/{id}")
-    public Employer getEmployerById(@PathVariable("id") long id, HttpServletResponse response){
-        Employer employer = employerService.findById(id);
+    public EmployerResponseDto getEmployerById(@PathVariable("id") long id, HttpServletResponse response){
+        EmployerResponseDto employer = employerFacade.findById(id);
         if(employer == null) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return employer;
     }
     @PutMapping("/{id}")
-    public Employer updateEmployerById(@PathVariable("id") long id,
-                                       @RequestBody Employer employer,
+    public EmployerResponseDto updateEmployerById(@PathVariable("id") long id,
+                                       @RequestBody EmployerRequestDto employer,
                                        HttpServletResponse response){
-        Employer employerSaved = employerService.updateById(id, employer);
+        EmployerResponseDto employerSaved = employerFacade.updateById(id, employer);
         if(employerSaved == null) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         return employerSaved;
     }
     @DeleteMapping("/{id}")
     public void deleteEmployer(@PathVariable("id") Long id,
                                        HttpServletResponse response){
-        employerService.deleteById(id);
+        employerFacade.deleteById(id);
     }
 
 }

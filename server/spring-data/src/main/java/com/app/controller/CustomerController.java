@@ -1,20 +1,17 @@
 package com.app.controller;
 
 import com.app.contstants.ApiConstants;
+import com.app.dto.reponse.AccountResponseDto;
+import com.app.dto.reponse.CustomerRequestDto;
+import com.app.dto.reponse.CustomerResponseDto;
+import com.app.dto.request.AccountRequestDto;
+import com.app.dto.request.EmployerRequestDto;
+import com.app.facade.AccountFacade;
+import com.app.facade.CustomerFacade;
 import com.app.models.Account;
-import com.app.models.Customer;
-import com.app.models.Employer;
-import com.app.services.AccountService;
-import com.app.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -22,17 +19,18 @@ import java.util.Set;
 public class CustomerController {
 
     @Autowired
-    private CustomerService customerService;
+    private CustomerFacade customerFacade;
     @Autowired
-    private AccountService accountService;
+    private AccountFacade accountFacade;
 
     @GetMapping
-    public Set<Customer> getCustomers(){
-        return customerService.findAll();
+    public Set<CustomerResponseDto> getCustomers(){
+        return customerFacade.findAll();
     }
     @PostMapping
-    public Customer saveCustomer(@RequestBody Customer customerCandidate, HttpServletResponse response){
-        Customer customer = customerService.save(customerCandidate);
+    public CustomerResponseDto saveCustomer(@RequestBody CustomerRequestDto customerCandidate,
+                                            HttpServletResponse response){
+        CustomerResponseDto customer = customerFacade.save(customerCandidate);
         if(customer == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else{
@@ -41,45 +39,42 @@ public class CustomerController {
         return customer;
     }
     @DeleteMapping
-    public void deleteAllCustomers(@RequestBody Set<Customer> customers){
-        customerService.deleteAll(customers);
+    public void deleteAllCustomers(@RequestBody Set<CustomerRequestDto> customers){
+        customerFacade.deleteAll(customers);
     }
     @GetMapping(value = "/{id}")
-    public Customer getCustomerById(@PathVariable("id") long id, HttpServletResponse response){
-        Customer customer = customerService.findById(id);
+    public CustomerResponseDto getCustomerById(@PathVariable("id") long id, HttpServletResponse response){
+        CustomerResponseDto customer = customerFacade.findById(id);
         if(customer == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
         return customer;
     }
     @PutMapping("/{id}")
-    public Customer updateCustomer(@RequestBody Customer customerCandidate, @PathVariable("id") long id,
-                                   HttpServletResponse response){
-        Customer customer = customerService.updateById(id, customerCandidate);
+    public CustomerResponseDto updateCustomer(@RequestBody CustomerRequestDto customerCandidate,
+                                              @PathVariable("id") long id,
+                                              HttpServletResponse response){
+        CustomerResponseDto customer = customerFacade.updateById(id, customerCandidate);
         if(customer == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-        else if(customer == customerCandidate){
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return null;
         }
         return customer;
     }
 
     @DeleteMapping(value = "/{id}")
     public void deleteCustomerById(@PathVariable("id") long id, HttpServletResponse response){
-         customerService.deleteById(id);
+         customerFacade.deleteById(id);
     }
 
     @GetMapping(value = "/{id}/accounts")
-    public Set<Account> getCustomerAccounts(@PathVariable("id") long id){
-        return customerService.getAccounts(id);
+    public Set<AccountResponseDto> getCustomerAccounts(@PathVariable("id") long id){
+        return customerFacade.getAccounts(id);
     }
     @PostMapping(value = "/{id}/accounts")
-    public Account addCustomerAccount(@PathVariable("id") long id,
-                                      @RequestBody Account account,
+    public AccountResponseDto addCustomerAccount(@PathVariable("id") long id,
+                                      @RequestBody AccountRequestDto account,
                                       HttpServletResponse response){
-        Account addedAccount = customerService.addCustomerAccount(id, account);
+        AccountResponseDto addedAccount = customerFacade.addCustomerAccount(id, account);
         if (addedAccount == null){
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -90,14 +85,14 @@ public class CustomerController {
     public void deleteCustomerAccount(@PathVariable("id") Long id,
                                       @PathVariable("accountId") Long accountId,
                                       HttpServletResponse response){
-        accountService.deleteById(accountId);
+        accountFacade.deleteById(accountId);
     }
 
     @PostMapping(value = "/{id}/employers")
-    public Customer addCustomerEmployer(@PathVariable("id") long id,
-                                        @RequestBody Employer employer,
+    public CustomerResponseDto addCustomerEmployer(@PathVariable("id") long id,
+                                        @RequestBody EmployerRequestDto employer,
                                         HttpServletResponse response){
-        Customer customer = customerService.addCustomerEmployer(id, employer);
+        CustomerResponseDto customer = customerFacade.addCustomerEmployer(id, employer);
         if(customer == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }

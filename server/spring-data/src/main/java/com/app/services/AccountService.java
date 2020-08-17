@@ -15,8 +15,8 @@ public class AccountService {
     @Autowired
     private AccountDao accountDao;
 
-    public Account save(Account accountCandidate) {
-        Account account = accountDao.findByNumber(accountCandidate.getNumber()).orElse(null);
+    public Account update(Long id, Account accountCandidate) {
+        Account account = accountDao.findById(accountCandidate.getId()).orElse(null);
         if (account == null) return null;
         account.setBalance(accountCandidate.getBalance());
         account.setCurrency(accountCandidate.getCurrency());

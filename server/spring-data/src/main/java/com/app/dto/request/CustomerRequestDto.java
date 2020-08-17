@@ -14,7 +14,6 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class CustomerRequestDto{
     @Size(min = 2)
     private String name;

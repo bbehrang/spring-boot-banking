@@ -1,5 +1,7 @@
 package com.app.models;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -16,13 +18,15 @@ abstract class AbstractEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "created", updatable = false, nullable = false)
+    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private Date createdAt;
 
-    @Column(name = "lastModifiedDate", nullable = false)
+    @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
+    @Column(name = "last_modified_at", nullable = false)
+    private Date lastModifiedAt;
 
     @Version
     private Long version;
