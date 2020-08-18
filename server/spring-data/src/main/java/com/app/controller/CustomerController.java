@@ -12,6 +12,7 @@ import com.app.facade.CustomerFacade;
 import com.app.models.Account;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -33,41 +34,25 @@ public class CustomerController {
         return customerFacade.findAll();
     }
     @PostMapping
-    public CustomerResponseDto saveCustomer(@Valid @RequestBody CustomerRequestDto customerCandidate,
-                                            HttpServletResponse response){
-        CustomerResponseDto customer = customerFacade.save(customerCandidate);
-        if(customer == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        } else{
-            response.setStatus(HttpServletResponse.SC_CREATED);
-        }
-        return customer;
+    public CustomerResponseDto saveCustomer(@Valid @RequestBody CustomerRequestDto customer){
+        return customerFacade.save(customer);
     }
     @DeleteMapping
     public void deleteAllCustomers(@Valid @RequestBody List<CustomerRequestDto> customers){
         customerFacade.deleteAll(customers);
     }
     @GetMapping(value = "/{id}")
-    public CustomerResponseDto getCustomerById(@PathVariable("id") long id, HttpServletResponse response){
-        CustomerResponseDto customer = customerFacade.findById(id);
-        if(customer == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-        return customer;
+    public CustomerResponseDto getCustomerById(@PathVariable("id") long id){
+        return customerFacade.findById(id);
     }
     @PutMapping("/{id}")
-    public CustomerResponseDto updateCustomer(@Valid @RequestBody CustomerRequestDto customerCandidate,
-                                              @PathVariable("id") long id,
-                                              HttpServletResponse response){
-        CustomerResponseDto customer = customerFacade.updateById(id, customerCandidate);
-        if(customer == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-        return customer;
+    public CustomerResponseDto updateCustomer(@Valid @RequestBody CustomerRequestDto customer,
+                                              @PathVariable("id") long id){
+        return customerFacade.updateById(id, customer);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteCustomerById(@PathVariable("id") long id, HttpServletResponse response){
+    public void deleteCustomerById(@PathVariable("id") long id){
          customerFacade.deleteById(id);
     }
 
@@ -77,32 +62,18 @@ public class CustomerController {
     }
     @PostMapping(value = "/{id}/accounts")
     public AccountResponseDto addCustomerAccount(@PathVariable("id") long id,
-                                      @Valid @RequestBody AccountRequestDto account,
-                                      HttpServletResponse response){
-        AccountResponseDto addedAccount = customerFacade.addCustomerAccount(id, account);
-        if (addedAccount == null){
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-        response.setStatus(HttpServletResponse.SC_CREATED);
-        return addedAccount;
+                                      @Valid @RequestBody AccountRequestDto account){
+        return customerFacade.addCustomerAccount(id, account);
     }
     @DeleteMapping(value = "/{id}/accounts/{accountId}")
     public void deleteCustomerAccount(@PathVariable("id") Long id,
-                                      @PathVariable("accountId") Long accountId,
-                                      HttpServletResponse response){
+                                      @PathVariable("accountId") Long accountId){
         accountFacade.deleteById(accountId);
     }
 
     @PostMapping(value = "/{id}/employers")
     public CustomerResponseDto addCustomerEmployer(@PathVariable("id") long id,
-                                        @Valid @RequestBody EmployerRequestDto employer,
-                                        HttpServletResponse response){
-        CustomerResponseDto customer = customerFacade.addCustomerEmployer(id, employer);
-        if(customer == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-        response.setStatus(HttpServletResponse.SC_CREATED);
-        return customer;
-
+                                        @Valid @RequestBody EmployerRequestDto employer){
+        return customerFacade.addCustomerEmployer(id, employer);
     }
 }

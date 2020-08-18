@@ -8,7 +8,10 @@ import java.util.*;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name ="customers")
+@Table(name ="customers", uniqueConstraints = {
+        @UniqueConstraint(name = "UC_customer_email", columnNames = {"email"}),
+        @UniqueConstraint(name = "UC_customer_phone", columnNames = {"phone"})
+})
 @Data
 @EqualsAndHashCode(callSuper = false, exclude = {"accounts", "employers"})
 @ToString(exclude = {"accounts", "employers"})

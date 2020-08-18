@@ -10,6 +10,6 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SimpleBalanceRequestDto {
-    @Positive
+    @Positive(message = "Requested amount should be greater than 0")
     private Double amount;
 }

@@ -11,9 +11,9 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransferRequestDto {
-    @NotBlank
+    @NotBlank(message = "Sender account number cannot be empty")
     private String sender;
-    @NotBlank
+    @NotBlank(message = "Receiver account number cannot be empty")
     private String receiver;
     @Positive(message = "Transfer amount should be greater than 0")
     private Double amount;

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Set;
 
@@ -29,10 +30,15 @@ public class CustomerService {
 
     @Transactional(readOnly = true)
     public Customer findById(Long id) {
-        return customerDao.findById(id).orElse(null);
+        return customerDao
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+id+"}"));
+
     }
     public Set<Account> getAccounts(Long id){
-        Customer customer = customerDao.findById(id).orElse(null);
+        Customer customer = customerDao
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+id+"}"));
         return customer.getAccounts();
     }
 
@@ -54,8 +60,8 @@ public class CustomerService {
     }
 
     public Customer updateById(Long id, Customer customerCandidate) {
-        Customer customer = customerDao.findById(customerCandidate.getId()).orElse(null);
-        if (customer == null) return null;
+        Customer customer = customerDao.findById(customerCandidate.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+id+"}"));
         customer.setName(customerCandidate.getName());
         customer.setEmail(customerCandidate.getEmail());
         customer.setAge(customerCandidate.getAge());
@@ -63,15 +69,18 @@ public class CustomerService {
     }
 
     public Customer addCustomerEmployer(long customerId, Employer employer) {
-        Customer customer = customerDao.findById(customerId).orElse(null);
-        if (customer == null) return null;
+        Customer customer = customerDao
+                            .findById(customerId)
+                            .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+customerId+"}"));
         customer.addEmployer(employer);
         return customerDao.save(customer);
     }
 
     public Account addCustomerAccount(long customerId, Account accountCandidate) {
-        Customer customer = customerDao.findById(customerId).orElse(null);
-        if (customer == null) return null;
+        Customer customer = customerDao
+                            .findById(customerId)
+                            .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+customerId+"}"));
+
         Account account = new Account(accountCandidate.getCurrency(), customer);
         account.setBalance(accountCandidate.getBalance());
         return accountDao.save(account);

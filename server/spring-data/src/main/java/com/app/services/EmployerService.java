@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Set;
 
 @Service
@@ -22,7 +23,9 @@ public class EmployerService {
     }
     @Transactional(readOnly = true)
     public Employer findById(Long id){
-        return employerDao.findById(id).orElse(null);
+        return employerDao
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employer not found for id={"+id+"}"));
     }
 
     public void delete(Employer employer){
@@ -39,8 +42,9 @@ public class EmployerService {
         return employerDao.save(employer);
     }
     public Employer updateById(Long id, Employer employerCandidate){
-        Employer employer = employerDao.findById(employerCandidate.getId()).orElse(null);
-        if(employer == null) return null;
+        Employer employer = employerDao
+                .findById(employerCandidate.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Employer not found for id={"+id+"}"));
         employer.setAddress(employerCandidate.getAddress());
         employer.setNumber(employerCandidate.getNumber());
         return employerDao.save(employer);

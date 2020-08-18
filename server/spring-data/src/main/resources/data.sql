@@ -14,10 +14,23 @@ create table customers(
 );*/
 
 insert into customers(age, name, email, password, phone, created_at, last_modified_at, version)
-values (1, 'name1', 'email1', 'pass1', '+(380)931543610', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
-       (2, 'name2', 'email2', 'pass2', '+(380)931543611', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
-       (3, 'name3', 'email3', 'pass3', '+(380)931543612', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
-       (4, 'name4', 'email4', 'pass4', '+(380)931543613', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0);
+values (1, 'name1', 'email1', 'pass1', '+(380)931543601', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (2, 'name2', 'email2', 'pass2', '+(380)931543602', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (3, 'name3', 'email3', 'pass3', '+(380)931543603', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (4, 'name4', 'email4', 'pass4', '+(380)931543604', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (5, 'name5', 'email5', 'pass1', '+(380)931543605', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (6, 'name6', 'email6', 'pass2', '+(380)931543606', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (7, 'name7', 'email7', 'pass3', '+(380)931543607', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (8, 'name8', 'email8', 'pass4', '+(380)931543608', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (9, 'name9', 'email9', 'pass1', '+(380)931543609', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (10, 'name10', 'email10', 'pass2', '+(380)931543610', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (11, 'name11', 'email11', 'pass3', '+(380)931543611', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (12, 'name12', 'email12', 'pass4', '+(380)931543612', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (13, 'name13', 'email13', 'pass1', '+(380)931543613', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (14, 'name14', 'email14', 'pass2', '+(380)931543614', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (15, 'name15', 'email15', 'pass3', '+(380)931543615', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+       (16, 'name16', 'email16', 'pass4', '+(380)931543616', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0);
+
 
 insert into accounts(balance, currency, number, customer_id, created_at, last_modified_at, version)
 values
