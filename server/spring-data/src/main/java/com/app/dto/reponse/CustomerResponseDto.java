@@ -16,6 +16,8 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class CustomerResponseDto extends AbstractResponseDto{
     @JsonView({CustomerList.class})
+    private Long id;
+    @JsonView({CustomerList.class})
     private String name;
     @JsonView({CustomerList.class})
     private String email;

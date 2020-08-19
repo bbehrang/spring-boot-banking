@@ -1,10 +1,10 @@
 package com.app.dto.request;
 
 
+import com.app.dto.request.groups.customer.CustomerListDelete;
 import com.app.dto.request.groups.customer.CustomerNew;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
@@ -14,6 +14,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerRequestDto implements Serializable {
+    @NotNull(groups = {CustomerListDelete.class})
+    private Long id;
     @Size(min = 2, message = "Name should be at least 2 characters long")
     private String name;
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",

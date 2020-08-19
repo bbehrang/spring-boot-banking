@@ -29,10 +29,8 @@ public class CustomerService {
     private EmployerDao employerDao;
 
     @Transactional(readOnly = true)
-    public List<Customer> findAll(int page, int size) {
-        Page<Customer> customers = customerDao.findAll(PageRequest.of(page, size));
-        if (customers.hasContent()) return customers.getContent();
-        else throw new EntityNotFoundException("Requested page does not exist");
+    public Page<Customer> findAll(int page, int size) {
+        return customerDao.findAll(PageRequest.of(page, size));
     }
 
     @Transactional(readOnly = true)
@@ -59,12 +57,16 @@ public class CustomerService {
         customerDao.deleteById(id);
     }
 
-    public void deleteAll(Set<Customer> customers) {
-        customerDao.deleteAll(customers);
+    public void deleteAll(List<Customer> customers) {
+        customers.forEach(customer -> customerDao.deleteById(customer.getId()));
     }
 
     public Customer save(Customer customer) {
         return customerDao.save(customer);
+    }
+
+    public List<Customer> saveAll(List<Customer> customers) {
+        return (List<Customer>) customerDao.saveAll(customers);
     }
 
     public Customer updateById(Long id, Customer customerCandidate) {
@@ -87,11 +89,11 @@ public class CustomerService {
         Customer customer = customerDao
                 .findById(customerId)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={" + customerId + "}"));
-        Employer employer = employerDao
+       /* Employer employer = employerDao
                 .findById(employerCandidate.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Employer not found for id={" + customerId + "}"));
+                .orElseThrow(() -> new EntityNotFoundException("Employer not found for id={" + customerId + "}"));*/
 
-        customer.addEmployer(employer);
+        customer.addEmployer(employerCandidate);
         //employer.getCustomers().add(customer);
         return customerDao.save(customer);
     }

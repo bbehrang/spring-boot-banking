@@ -24,9 +24,11 @@ public class CustomerFacade {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<CustomerResponseDto> findAll(int page, int size) {
-        return modelMapper.map(customerService.findAll(page, size),
-                new TypeToken<List<CustomerResponseDto>>(){}.getType());
+    public Page<CustomerResponseDto> findAll(int page, int size) {
+        return customerService
+                .findAll(page, size)
+                .map(customer ->
+                        modelMapper.map(customer, CustomerResponseDto.class));
     }
 
     public CustomerResponseDto findById(Long id) {
@@ -50,9 +52,15 @@ public class CustomerFacade {
                 new TypeToken<List<Customer>>(){}.getType()));
     }
 
-    public CustomerResponseDto save(CustomerRequestDto customerCandidate) {
-        return modelMapper.map(customerService.save(modelMapper.map(customerCandidate, Customer.class)),
+    public CustomerResponseDto save(CustomerRequestDto customer) {
+        return modelMapper.map(customerService.save(modelMapper.map(customer, Customer.class)),
                 CustomerResponseDto.class);
+    }
+
+    public List<CustomerResponseDto> save(List<CustomerRequestDto> customers) {
+        return modelMapper.map(customerService.saveAll(modelMapper.map(customers,
+                new TypeToken<List<Customer>>(){}.getType())),
+                new TypeToken<List<CustomerResponseDto>>(){}.getType());
     }
 
     public CustomerResponseDto updateById(Long id, CustomerRequestDto customerCandidate) {

@@ -7,6 +7,8 @@ import com.app.dto.reponse.CustomerResponseDto;
 import com.app.dto.reponse.views.customer.CustomerList;
 import com.app.dto.request.AccountRequestDto;
 import com.app.dto.request.EmployerRequestDto;
+import com.app.dto.request.ValidListDto;
+import com.app.dto.request.groups.customer.CustomerListDelete;
 import com.app.facade.AccountFacade;
 import com.app.facade.CustomerFacade;
 import com.app.models.Account;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -35,8 +38,13 @@ public class CustomerController {
     @GetMapping
     public List<CustomerResponseDto> getCustomers(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
-        return customerFacade.findAll(page, size);
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            HttpServletResponse response) {
+        Page<CustomerResponseDto> customers = customerFacade.findAll(page, size);
+        response.setHeader("totalElements", customers.getTotalElements() + "");
+        response.setHeader("totalPages", customers.getTotalPages() + "");
+        if (customers.hasContent()) return customers.getContent();
+        else throw new EntityNotFoundException("Requested page does not exist");
 
     }
 
@@ -45,9 +53,15 @@ public class CustomerController {
         return customerFacade.save(customer);
     }
 
+    @PostMapping("/all")
+    public List<CustomerResponseDto> saveCustomersList(@Valid @RequestBody ValidListDto<CustomerRequestDto> customers) {
+        return customerFacade.save(customers.getList());
+    }
+
+
     @DeleteMapping
-    public void deleteAllCustomers(@Valid @RequestBody List<CustomerRequestDto> customers) {
-        customerFacade.deleteAll(customers);
+    public void deleteAllCustomers(@Validated(CustomerListDelete.class) @RequestBody ValidListDto<CustomerRequestDto> customers) {
+        customerFacade.deleteAll(customers.getList());
     }
 
     @GetMapping(value = "/{id}")
