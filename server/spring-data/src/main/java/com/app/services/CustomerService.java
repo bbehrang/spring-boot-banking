@@ -7,7 +7,10 @@ import com.app.models.Employer;
 import com.app.repository.AccountDao;
 import com.app.repository.CustomerDao;
 
+import com.app.repository.EmployerDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,23 +25,28 @@ public class CustomerService {
     private CustomerDao customerDao;
     @Autowired
     private AccountDao accountDao;
+    @Autowired
+    private EmployerDao employerDao;
 
     @Transactional(readOnly = true)
-    public List<Customer> findAll() {
-        return (List<Customer>) customerDao.findAll();
+    public List<Customer> findAll(int page, int size) {
+        Page<Customer> customers = customerDao.findAll(PageRequest.of(page, size));
+        if (customers.hasContent()) return customers.getContent();
+        else throw new EntityNotFoundException("Requested page does not exist");
     }
 
     @Transactional(readOnly = true)
     public Customer findById(Long id) {
         return customerDao
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+id+"}"));
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={" + id + "}"));
 
     }
-    public Set<Account> getAccounts(Long id){
+
+    public Set<Account> getAccounts(Long id) {
         Customer customer = customerDao
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+id+"}"));
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={" + id + "}"));
         return customer.getAccounts();
     }
 
@@ -60,30 +68,50 @@ public class CustomerService {
     }
 
     public Customer updateById(Long id, Customer customerCandidate) {
-        Customer customer = customerDao.findById(customerCandidate.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+id+"}"));
-        customer.setName(customerCandidate.getName());
-        customer.setEmail(customerCandidate.getEmail());
-        customer.setAge(customerCandidate.getAge());
+        Customer customer = customerDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={" + id + "}"));
+        if (customerCandidate.getName() != null)
+            customer.setName(customerCandidate.getName());
+        if (customerCandidate.getEmail() != null)
+            customer.setEmail(customerCandidate.getEmail());
+        if (customerCandidate.getAge() != null)
+            customer.setAge(customerCandidate.getAge());
+        if (customerCandidate.getPassword() != null)
+            customer.setPassword(customerCandidate.getPassword());
+        if (customerCandidate.getPhone() != null)
+            customer.setPhone(customerCandidate.getPhone());
         return customerDao.save(customer);
     }
 
-    public Customer addCustomerEmployer(long customerId, Employer employer) {
+    public Customer addCustomerEmployer(long customerId, Employer employerCandidate) {
         Customer customer = customerDao
-                            .findById(customerId)
-                            .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+customerId+"}"));
+                .findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={" + customerId + "}"));
+        Employer employer = employerDao
+                .findById(employerCandidate.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Employer not found for id={" + customerId + "}"));
+
         customer.addEmployer(employer);
+        //employer.getCustomers().add(customer);
         return customerDao.save(customer);
     }
 
     public Account addCustomerAccount(long customerId, Account accountCandidate) {
         Customer customer = customerDao
-                            .findById(customerId)
-                            .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={"+customerId+"}"));
+                .findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={" + customerId + "}"));
 
         Account account = new Account(accountCandidate.getCurrency(), customer);
         account.setBalance(accountCandidate.getBalance());
         return accountDao.save(account);
+    }
+    public Customer deleteCustomerEmployer(Long customerId, Long employerId){
+        Customer customer = customerDao
+                .findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={" + customerId + "}"));
+
+        customer.getEmployers().removeIf(employer -> employer.getId().equals(employerId));
+        return customerDao.save(customer);
     }
 
 }

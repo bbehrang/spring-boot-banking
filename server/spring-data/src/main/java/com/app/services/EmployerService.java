@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -18,8 +19,8 @@ public class EmployerService {
     private EmployerDao employerDao;
 
     @Transactional(readOnly = true)
-    public Set<Employer> findAll(){
-        return (Set<Employer>) employerDao.findAll();
+    public List<Employer> findAll(){
+        return (List<Employer>) employerDao.findAll();
     }
     @Transactional(readOnly = true)
     public Employer findById(Long id){

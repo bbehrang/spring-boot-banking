@@ -9,6 +9,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -18,8 +19,8 @@ public class EmployerFacade {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Set<EmployerResponseDto> findAll(){
-        return  modelMapper.map(employerService.findAll(), new TypeToken<Set<EmployerResponseDto>>(){}.getType());
+    public List<EmployerResponseDto> findAll(){
+        return  modelMapper.map(employerService.findAll(), new TypeToken<List<EmployerResponseDto>>(){}.getType());
     }
     public EmployerResponseDto findById(Long id){
         return modelMapper.map(employerService.findById(id), EmployerResponseDto.class);

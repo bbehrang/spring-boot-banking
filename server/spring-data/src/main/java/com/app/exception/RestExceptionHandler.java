@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.google.protobuf.Api;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,7 +27,7 @@ import java.util.regex.Pattern;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-
+    @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException  ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
@@ -41,7 +43,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex){
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+    @ExceptionHandler(InsufficientFundsException.class)
+    protected ResponseEntity<Object> InsufficientFunds(InsufficientFundsException ex){
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getMessage());
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -67,5 +74,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         JsonMappingException jme = (JsonMappingException) ex.getCause();
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage(), jme.getOriginalMessage());
         return handleExceptionInternal(ex, apiError, headers, apiError.getStatus(), request);
+    }
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    protected ResponseEntity<Object> handleEmptyResultDataAccess(EmptyResultDataAccessException ex){
+
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 }

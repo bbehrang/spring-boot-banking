@@ -8,7 +8,9 @@ import com.app.facade.AccountFacade;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -20,37 +22,25 @@ public class AccountController {
     private AccountFacade accountFacade;
 
     @GetMapping(value = "/{number}")
-    public AccountResponseDto getAccount(@PathVariable("number") String number,
-                                         HttpServletResponse response){
-        AccountResponseDto account = accountFacade.getAccountByNumber(number);
-        if(account == null) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        return account;
+    public AccountResponseDto getAccount(@PathVariable("number") String number) {
+        return accountFacade.getAccountByNumber(number);
     }
+
     @PutMapping(value = "/withdrawal/{number}")
     public AccountResponseDto withdraw(@PathVariable("number") String number,
-                            @RequestBody Map<String, Double> amount,
-                            HttpServletResponse response) throws JsonProcessingException {
-
-        AccountResponseDto account = accountFacade.withdraw(number, amount.get("amount"));
-        if(account == null) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        return account;
+                                       @Valid @RequestBody SimpleBalanceRequestDto balanceRequestDto) {
+        return accountFacade.withdraw(number, balanceRequestDto.getAmount());
     }
+
     @PutMapping(value = "/top-up/{number}")
     public AccountResponseDto topUp(@PathVariable("number") String number,
-                                    @RequestBody SimpleBalanceRequestDto simpleBalanceRequestDto,
-                                    HttpServletResponse response) {
-
-        AccountResponseDto account = accountFacade.topUp(number, simpleBalanceRequestDto.getAmount());
-        if(account == null) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        return account;
+                                    @Valid @RequestBody SimpleBalanceRequestDto simpleBalanceRequestDto) {
+        return accountFacade.topUp(number, simpleBalanceRequestDto.getAmount());
     }
-    @PutMapping(value = "/transfer")
-    public AccountResponseDto topUp(@RequestBody TransferRequestDto transferRequestDto,
-                                    HttpServletResponse response) {
 
-        AccountResponseDto account = accountFacade.transfer(transferRequestDto.getSender(),
+    @PutMapping(value = "/transfer")
+    public AccountResponseDto topUp(@Valid @RequestBody TransferRequestDto transferRequestDto) {
+        return accountFacade.transfer(transferRequestDto.getSender(),
                 transferRequestDto.getReceiver(), transferRequestDto.getAmount());
-        if(account == null) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        return account;
     }
 }

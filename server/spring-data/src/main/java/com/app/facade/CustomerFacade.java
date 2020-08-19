@@ -12,6 +12,7 @@ import com.app.services.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -23,15 +24,13 @@ public class CustomerFacade {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<CustomerResponseDto> findAll() {
-        return modelMapper.map((List<Customer>) customerService.findAll(),
+    public List<CustomerResponseDto> findAll(int page, int size) {
+        return modelMapper.map(customerService.findAll(page, size),
                 new TypeToken<List<CustomerResponseDto>>(){}.getType());
     }
 
     public CustomerResponseDto findById(Long id) {
-        Customer customer = customerService.findById(id);
-        CustomerResponseDto  cs= modelMapper.map(customer, CustomerResponseDto.class);
-        return cs;
+        return modelMapper.map(customerService.findById(id), CustomerResponseDto.class);
     }
     public List<AccountResponseDto> getAccounts(Long id){
         return modelMapper.map(customerService.getAccounts(id),
@@ -61,13 +60,17 @@ public class CustomerFacade {
                 CustomerResponseDto.class);
     }
 
-    public CustomerResponseDto addCustomerEmployer(long customerId, EmployerRequestDto employer) {
+    public CustomerResponseDto addCustomerEmployer(Long customerId, EmployerRequestDto employer) {
         return modelMapper.map(customerService.addCustomerEmployer(customerId, modelMapper.map(employer, Employer.class)),
                 CustomerResponseDto.class);
     }
 
-    public AccountResponseDto addCustomerAccount(long customerId, AccountRequestDto accountCandidate) {
+    public AccountResponseDto addCustomerAccount(Long customerId, AccountRequestDto accountCandidate) {
         return modelMapper.map(customerService.addCustomerAccount(customerId, modelMapper.map(accountCandidate, Account.class)),
                 AccountResponseDto.class);
+    }
+    public CustomerResponseDto deleteCustomerEmployer(Long customerId, Long employerId){
+        return modelMapper.map(customerService.deleteCustomerEmployer(customerId, employerId),
+                CustomerResponseDto.class);
     }
 }

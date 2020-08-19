@@ -7,6 +7,8 @@ import com.app.facade.EmployerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -16,30 +18,24 @@ public class EmployerController {
     private EmployerFacade employerFacade;
 
     @GetMapping
-    public Set<EmployerResponseDto> getAll(){
+    public List<EmployerResponseDto> getAll(){
         return employerFacade.findAll();
     }
     @DeleteMapping
-    public void deleteEmployers(@RequestBody Set<EmployerRequestDto> employers){
+    public void deleteEmployers(@Valid @RequestBody Set<EmployerRequestDto> employers){
         employerFacade.deleteAll(employers);
     }
     @GetMapping("/{id}")
-    public EmployerResponseDto getEmployerById(@PathVariable("id") long id, HttpServletResponse response){
-        EmployerResponseDto employer = employerFacade.findById(id);
-        if(employer == null) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        return employer;
+    public EmployerResponseDto getEmployerById(@PathVariable("id") long id){
+        return employerFacade.findById(id);
     }
     @PutMapping("/{id}")
     public EmployerResponseDto updateEmployerById(@PathVariable("id") long id,
-                                       @RequestBody EmployerRequestDto employer,
-                                       HttpServletResponse response){
-        EmployerResponseDto employerSaved = employerFacade.updateById(id, employer);
-        if(employerSaved == null) response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        return employerSaved;
+                                       @Valid @RequestBody EmployerRequestDto employer){
+        return employerFacade.updateById(id, employer);
     }
     @DeleteMapping("/{id}")
-    public void deleteEmployer(@PathVariable("id") Long id,
-                                       HttpServletResponse response){
+    public void deleteEmployer(@PathVariable("id") Long id){
         employerFacade.deleteById(id);
     }
 

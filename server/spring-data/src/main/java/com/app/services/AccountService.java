@@ -1,10 +1,16 @@
 package com.app.services;
 
+import com.app.exception.InsufficientFundsException;
 import com.app.models.Account;
 import com.app.repository.AccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -79,17 +85,18 @@ public class AccountService {
         Account sender = accountDao
                 .findByNumber(senderNumber)
                 .orElseThrow(() -> new EntityNotFoundException("Sender account not found " +
-                        "                                       for number={"+senderNumber+"}"));
+                                                                "for number={"+senderNumber+"}"));
 
         if (sender.getBalance() >= amount) {
             Account receiver = accountDao
                     .findByNumber(receiverNumber)
                     .orElseThrow(() -> new EntityNotFoundException("Receiver account not found " +
-                            "                                       for number={"+receiverNumber+"}"));
+                                                                     "for number={"+receiverNumber+"}"));
             sender.setBalance(sender.getBalance() - amount);
             receiver.setBalance(receiver.getBalance() + amount);
             accountDao.save(receiver);
         }
-        return accountDao.save(sender);
+        else throw new InsufficientFundsException("Insufficient funds");
+        return sender;
     }
 }
