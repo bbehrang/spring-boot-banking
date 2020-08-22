@@ -55,7 +55,7 @@ export const customerSlice = createSlice({
         error: null
     },
     reducers: {
-        getAll: state => state.items
+        getAll: state => state.items,
     },
     extraReducers: {
         [fetchCustomers.pending]: state => {
@@ -138,7 +138,7 @@ export const customerSlice = createSlice({
             const {account, customerId, receiver, amount} = action.payload;
             const senderIndex = state.items.findIndex(item => item.id === customerId);
             const receiverIndex = state.items.findIndex(item => item.number === receiver);
-            state.items[senderIndex].accounts[findIndex(acc => acc.id === account.id)] = account;
+           // state.items[senderIndex].accounts[findIndex(acc => acc.id === account.id)] = account;
 
         },
         [transfer.rejected]: (state, action) => {

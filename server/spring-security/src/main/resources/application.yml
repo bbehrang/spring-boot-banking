@@ -18,11 +18,19 @@ spring:
       enabled: true
   security:
     oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8083/auth
-          jwk-set-uri: 
+      client:
+        registration:
+          github:
+            client-id: 6b0e8100ce2d0c8f9694
+            client-secret: 4ad29e514cc61f6f561c46a18815bddf55f6b661
+            scope:
+              - user:email
+              - read:user
 server:
   port: 9000
+app:
+  auth:
+    tokenSecret: secret
+
 
 

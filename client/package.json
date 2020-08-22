@@ -13,7 +13,9 @@
     "clsx": "latest",
     "@reduxjs/toolkit": "^1.4.0",
     "react-redux": "^7.2.1",
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "react-router-dom": "^5.2.0",
+    "query-string": "^6.13.1"
   },
   "scripts": {
     "start": "react-scripts start",
