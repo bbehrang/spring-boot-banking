@@ -11,6 +11,8 @@ import com.app.repository.EmployerDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,8 @@ public class CustomerService {
     private AccountDao accountDao;
     @Autowired
     private EmployerDao employerDao;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional(readOnly = true)
     public Page<Customer> findAll(int page, int size) {
@@ -38,6 +42,13 @@ public class CustomerService {
         return customerDao
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found for id={" + id + "}"));
+
+    }
+    @Transactional(readOnly = true)
+    public Customer findByEmail(String email) {
+        return customerDao
+                .findByEmail(email)
+                .orElse(null);
 
     }
 
@@ -62,6 +73,7 @@ public class CustomerService {
     }
 
     public Customer save(Customer customer) {
+       customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
         return customerDao.save(customer);
     }
 

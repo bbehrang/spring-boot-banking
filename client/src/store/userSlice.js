@@ -14,6 +14,7 @@ export const userSlice = createSlice({
         token: null,
         username: '',
         status: status.IDLE,
+        isAuthenticated: false
     },
     reducers: {
         getToken: state => state.token,

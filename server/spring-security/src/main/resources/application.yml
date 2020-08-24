@@ -20,17 +20,13 @@ spring:
     oauth2:
       client:
         registration:
-          github:
-            client-id: 6b0e8100ce2d0c8f9694
-            client-secret: 4ad29e514cc61f6f561c46a18815bddf55f6b661
-            scope:
-              - user:email
-              - read:user
+          okta:
+            client-id: 0oarfo0rk1mvsJvYV4x6
+            client-secret: xJ8lVM8ckFLrUuvZXIosimTHZy6ufJij85nbOcNj
+            scope: openid, email, profile
+        provider:
+          okta:
+            issuer-uri: https://dev-474131.okta.com/oauth2/default
 server:
   port: 9000
-app:
-  auth:
-    tokenSecret: secret
-
-
 

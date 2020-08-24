@@ -11,8 +11,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CustomerDao extends PagingAndSortingRepository<Customer, Long> {
+    Optional<Customer> findByEmail(String email);
 
 }
