@@ -41,9 +41,11 @@ public class CustomerController {
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             HttpServletResponse response) {
         Page<CustomerResponseDto> customers = customerFacade.findAll(page, size);
-        response.setHeader("totalElements", customers.getTotalElements() + "");
-        response.setHeader("totalPages", customers.getTotalPages() + "");
-        if (customers.hasContent()) return customers.getContent();
+        if(customers != null)
+            response.setHeader("totalElements", customers.getTotalElements() + "");
+        if(customers != null)
+            response.setHeader("totalPages", customers.getTotalPages() + "");
+        if (customers != null && customers.hasContent()) return customers.getContent();
         else throw new EntityNotFoundException("Requested page does not exist");
 
     }

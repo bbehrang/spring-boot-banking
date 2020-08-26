@@ -2,15 +2,10 @@ package com.app.filter;
 
 import com.app.contstants.ApiConstants;
 import com.app.dto.request.LoginRequestDto;
-import com.app.models.Customer;
 import com.app.models.TokenData;
-import com.app.services.JwtService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

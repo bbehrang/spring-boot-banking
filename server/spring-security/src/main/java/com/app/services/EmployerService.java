@@ -50,6 +50,4 @@ public class EmployerService {
         employer.setNumber(employerCandidate.getNumber());
         return employerDao.save(employer);
     }
-
-    
 }
