@@ -29,4 +29,8 @@ spring:
             issuer-uri: https://dev-474131.okta.com/oauth2/default
 server:
   port: 9000
-
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%t] %logger{36} - %msg%n"
+  file:
+    name: bank.log

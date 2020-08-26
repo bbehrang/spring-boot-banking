@@ -6,6 +6,7 @@ import com.app.dto.request.CustomerRequestDto;
 import com.app.dto.request.LoginRequestDto;
 import com.app.facade.CustomerFacade;
 import com.app.services.CustomerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 
-
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/" + ApiConstants.API_VERSION + "/auth")
 public class AuthController {
@@ -23,6 +24,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public void signUp(@Valid @RequestBody CustomerRequestDto customerRequestDto){
+        log.info("registering new customer");
         customerFacade.save(customerRequestDto);
     }
 
