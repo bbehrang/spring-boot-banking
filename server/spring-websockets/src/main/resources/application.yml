@@ -1,0 +1,36 @@
+spring:
+  profiles:
+    active: local
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:bank
+    driver-class-name: org.h2.Driver
+    username: sa
+    platform: org.hibernate.dialect.h2dialect
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  devtools:
+    restart:
+      enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          okta:
+            client-id: 0oarfo0rk1mvsJvYV4x6
+            client-secret: xJ8lVM8ckFLrUuvZXIosimTHZy6ufJij85nbOcNj
+            scope: openid, email, profile
+        provider:
+          okta:
+            issuer-uri: https://dev-474131.okta.com/oauth2/default
+server:
+  port: 9000
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%t] %logger{36} - %msg%n"
+  file:
+    name: bank.log
