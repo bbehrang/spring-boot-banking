@@ -3,12 +3,14 @@ package com.app.controller;
 import com.app.contstants.ApiConstants;
 import com.app.dto.reponse.AccountResponseDto;
 import com.app.dto.reponse.NotificationResponseDto;
+import com.app.dto.reponse.OperationType;
 import com.app.dto.request.SimpleBalanceRequestDto;
 import com.app.dto.request.TransferRequestDto;
 import com.app.facade.AccountFacade;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +46,9 @@ public class AccountController {
                                     @Valid @RequestBody SimpleBalanceRequestDto simpleBalanceRequestDto) {
         log.info("Topping account  with number {}, amount {}", number, simpleBalanceRequestDto.getAmount());
 
-        return accountFacade.topUp(number, simpleBalanceRequestDto.getAmount());
+        AccountResponseDto response =  accountFacade.topUp(number, simpleBalanceRequestDto.getAmount());
+        this.topUpNotification(simpleBalanceRequestDto, number);
+        return response;
     }
 
     @PutMapping(value = "/transfer")
@@ -55,10 +59,15 @@ public class AccountController {
         return accountFacade.transfer(transferRequestDto.getSender(),
                 transferRequestDto.getReceiver(), transferRequestDto.getAmount());
     }
-    @MessageMapping("/top-up/{number}")
-    @SendTo("/notification/data")
-    public NotificationResponseDto topUpNotification(@Valid @RequestBody SimpleBalanceRequestDto simpleBalanceRequestDto,
-                                                     @PathVariable("number") String number){
-        log.info("web socket opened for top up for ");
+    @MessageMapping("/top-up")
+    @SendTo("/notifications/data")
+    private NotificationResponseDto topUpNotification(@Valid @RequestBody SimpleBalanceRequestDto simpleBalanceRequestDto,
+                                                      String number){
+        //log.info("web socket opened for top up for ");
+        return NotificationResponseDto
+                .builder()
+                .amount(simpleBalanceRequestDto.getAmount())
+                .operation(OperationType.topUp)
+                .build();
     }
 }

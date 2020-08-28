@@ -2,33 +2,29 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {status} from "./status";
 import Api from "./../services/Api";
 
-export const loginGithub = createAsyncThunk('login/github', async (payload) => {
-    console.log("loging", payload);
-    const {code, state} = payload;
-    const response = await Api.sendRequest(`/auth/github/login`, 'GET');
+export const login = createAsyncThunk('login', async (payload) => {
+    const response = await Api.sendRequest(`auth/login`, 'POST', payload);
     return response.data;
 });
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
-        token: null,
-        username: '',
+        token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbDEiLCJleHAiOjE1OTk0Mjg4OTF9.Y7eLq9cImK-tas4IWzke5VrblNU_L4vj09to7DpO9ZJ9dFf516VqekQQ770Xs54Xh9v62XE1CKzrntY-xDJTFA',
         status: status.IDLE,
-        isAuthenticated: false
     },
     reducers: {
         getToken: state => state.token,
         setError : (state, action) => state.error = action.payload
     },
     extraReducers:{
-        [loginGithub.pending]: state => {
+        [login.pending]: state => {
             state.status = status.LOADING
         },
-        [loginGithub.fulfilled]: (state, action) => {
+        [login.fulfilled]: (state, action) => {
             state.status = status.SUCCEEDED;
-            state.items = action.payload;
+            state.token = action.payload;
         },
-        [loginGithub.rejected]: (state, action) => {
+        [login.rejected]: (state, action) => {
             state.status = status.FAILED;
             state.error = action.error;
         },

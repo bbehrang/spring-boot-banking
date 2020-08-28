@@ -14,7 +14,7 @@ create table customers(
 );*/
 
 insert into customers(age, name, email, password, phone, created_at, last_modified_at, version)
-values (1, 'name1', 'email1', '$2y$12$6DEGQxwHpKVLpiZD0MXM7u9RYOm8DRA3PDTHipO6l629l4zmyllpe', '+(380)931543601', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
+values (1, 'name1', 'email1', '$2y$12$lwd2bfFUhZ5LpVcCb2l9R.P6Zrrw32Nxs/R6SnQ7/DTRb.NsjLRkq', '+(380)931543601', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
        (2, 'name2', 'email2', '$2y$12$6DEGQxwHpKVLpiZD0MXM7u9RYOm8DRA3PDTHipO6l629l4zmyllpe', '+(380)931543602', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
        (3, 'name3', 'email3', '$2y$12$6DEGQxwHpKVLpiZD0MXM7u9RYOm8DRA3PDTHipO6l629l4zmyllpe', '+(380)931543603', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),
        (4, 'name4', 'email4', '$2y$12$6DEGQxwHpKVLpiZD0MXM7u9RYOm8DRA3PDTHipO6l629l4zmyllpe', '+(380)931543604', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0),

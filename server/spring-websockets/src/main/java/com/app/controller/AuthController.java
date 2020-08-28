@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Slf4j
 @RestController
@@ -27,6 +28,7 @@ public class AuthController {
         log.info("registering new customer");
         customerFacade.save(customerRequestDto);
     }
+
 
 /*    @PostMapping("/login")
     public void signIn(@Valid @RequestBody LoginRequestDto loginRequestDto){
