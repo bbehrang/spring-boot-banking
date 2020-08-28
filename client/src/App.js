@@ -8,15 +8,17 @@ import {useSelector} from "react-redux";
 
 function App() {
     const token = useSelector(state => state.user.token);
-    console.log(token);
-    const sock = new SockJS('http://localhost:9000/notifications');
+    const sock = new SockJS('http://localhost:9000/websocket',{
+        transports: ['xhr-streaming'],
+        headers: {'Authorization': token}
+    });
     let stompClient = Stomp.over(sock);
     sock.onopen = function() {
         console.log('open');
     };
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/public', function (greeting) {
+        stompClient.subscribe('/notifications/data', function (greeting) {
             console.log(greeting);
             //you can execute any function here
         });
@@ -36,6 +38,7 @@ function App() {
                     </Route>
                 </Switch>
             </Router>
+            <button onClick={() =>  stompClient.send("/app/top-up2", {'Authorization': token}, 'hello')}>hello</button>
 
         </>
     );

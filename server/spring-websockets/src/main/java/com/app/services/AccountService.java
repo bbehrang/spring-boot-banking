@@ -68,6 +68,7 @@ public class AccountService {
         if (account.getBalance() >= amount) {
             account.setBalance(account.getBalance() - amount);
         }
+        else throw new InsufficientFundsException("Insufficient funds");
         return accountDao.save(account);
     }
 
